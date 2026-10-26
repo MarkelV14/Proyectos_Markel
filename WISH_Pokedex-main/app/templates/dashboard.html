@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Panela - Pokédex{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">🏠 Zure Panela</h1>
+    
+    <div class="row">
+        <!-- Información del usuario -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Zure Profila</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Erabiltzailea:</strong> {{ user.username }}</p>
+                    <p><strong>Posta elektronikoa:</strong> {{ user.email }}</p>
+                    <p><strong>Rola:</strong> 
+                        {% if user.role == 'admin' %}
+                        <span class="badge bg-danger">Administratzailea</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Erabiltzailea</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Egoera:</strong> 
+                        {% if user.is_approved %}
+                        <span class="badge bg-success">Onartua ✅</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Onartzeko ⏳</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Kide izanik:</strong> {{ user.created_at[:10] if user.created_at else 'Data ezezaguna' }}</p>
+
+                    <hr>
+                    <div class="d-grid">
+                        <a href="{{ url_for('auth.edit_profile') }}" class="btn btn-outline-primary btn-sm">
+                            ✏️ Profila Editatu
+                        </a>
+                    </div>
+                    </div>
+            </div>
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Zure Pokémon Bilduma</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h3 class="text-success">{{ poke_stats.captured }}</h3>
+                                    <p>Pokémon Harrapatuak</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h3 class="text-secondary">{{ poke_stats.missing }}</h3>
+                                    <p>Pokémon Harrapatzeko</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h3>{{ team_count }}</h3>
+                                    <p>Oraingo Taldea</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Azken Ekintzak</h6>
+                    <div class="mt-3">
+                        {% if user.is_approved %}
+                            <a href="{{ url_for('pokedex.view_pokedex') }}" class="btn btn-outline-primary">Ikusi Nire Pokédex</a>
+                            
+                            <a href="{{ url_for('team.create_team') }}" class="btn btn-primary">
+                                ➕ Sortu Taldea
+                            </a>
+                            <a href="{{ url_for('team.manage_team') }}" class="btn btn-outline-warning">
+                                🛠️ Kudeatu Taldea
+                            </a>
+                            {% if user.role == 'admin' %}
+                            <a href="{{ url_for('admin.admin_panel') }}" class="btn btn-outline-danger">🏢 Administrazioa</a>
+                            {% endif %}
+                        {% else %}
+                            <div class="alert alert-warning">
+                                <p>Zure kontua oraindik ez da onartu. Itxaron administratzailearen baieztapena erabiltzeko aukerak erabiltzeko.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+    
+    <!-- Información adicional -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Pokédex Sistemari Buruz</h5>
+                </div>
+                <div class="card-body">
+                    <p>Pokédex sistemarekin zure Pokémon bilduma kudeatu dezakezu:</p>
+                    <ul>
+                        <li>Bilatu Pokémon izen edo mota arabera</li>
+                        <li>Kudeatu zure Pokémon bilduma osoa</li>
+                        <li>Sortu borroka taldeak</li>
+                        <li>Ikusi zure harrapaketa estatistikak</li>
+                        <li>Partekatu zure bilduma beste entrenatzaileekin</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
